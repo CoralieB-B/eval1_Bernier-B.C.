@@ -1,0 +1,95 @@
+---
+Titre: "Évaluation 1"
+Auteur: "Coralie Bernier-Breton"
+Cours: "Approches statistiques en océanographie"
+Date: "09/02/2023"
+output: html_document
+---
+
+# Titre 1
+
+# Charger les bibliothèques
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+# Charger les données
+
+```{r}
+setwd("C:/Users/coral/Desktop/UQAR/H23/Statistiques/TP1")
+data <- read_excel("m_balthica.xlsx")
+data.frame(data)
+```
+
+# Résumé préliminaire
+```{r}
+summary(data)
+```
+
+# Calcul des statistiques descriptives
+
+On calcule la moyenne, la médiane, le maximum, le minimum, la variance et l'écart-type de la masse (g) et de la longueur (mm) des individus ainsi que la proportion moyenne d'individus parasités selon le sexe et le niveau (N1, N2, N3)
+
+```{r}
+# Femelles
+Fem <- data %>% 
+  filter(Sexe == "Femelle") %>% 
+  group_by(Niveau) %>% 
+  summarise(Sexe = "Femelle",
+            n_m = n(),
+            moyenne_m = mean(MA),
+            mediane_m = median(MA),
+            variance_m = var(MA),
+            sd_m = sd(MA),
+            min_m = min(MA),
+            max_m = max(MA),
+            n_l = n(),
+            moyenne_l = mean(LF),
+            mediane_l = median(LF),
+            variance_l = var(LF),
+            sd_l = sd(LF),
+            min_l = min(LF),
+            max_l = max(LF),
+            Parasites = mean(Par))
+# Males
+Males <- data %>% 
+  filter(Sexe == "Male") %>% 
+  group_by(Niveau) %>% 
+  summarise(Sexe = "Males",
+            n_m = n(),
+            moyenne_m = mean(MA),
+            mediane_m = median(MA),
+            variance_m = var(MA),
+            sd_m = sd(MA),
+            min_m = min(MA),
+            max_m = max(MA),
+            n_l = n(),
+            moyenne_l = mean(LF),
+            mediane_l = median(LF),
+            variance_l = var(LF),
+            sd_l = sd(LF),
+            min_l = min(LF),
+            max_l = max(LF),
+            Parasites = mean(Par))
+
+# Tableau complet
+stat_desc <- bind_rows(Fem, Males)
+data.frame(stat_desc)
+```
+
+# Sauvegarder le tableau créé
+
+```{r}
+write.table(stat_desc, "stat_descriptives.csv", sep = ";", dec=".", row.names=F, col.names=T)
+
+```
+
+# Sources utilisées
+
+```{r}
+sessionInfo()
+```
+
